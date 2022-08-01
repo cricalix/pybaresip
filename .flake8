@@ -1,0 +1,4 @@
+[flake8]
+ignore =
+    # Trust black for line length
+    E501,
