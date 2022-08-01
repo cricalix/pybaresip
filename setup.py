@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name="pybaresip",
     version="0.0.1",
-    packages=["pybaresipy"],
+    packages=["pybaresip"],
     url="https://github.com/cricalix/pybaresip",
     install_requires=[],
     license="MIT",
