@@ -37,6 +37,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       # Runs a single command using the runners shell
       - name: Run tests
-        run: testslide -f progress --shuffle tests/*.py
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+          testslide -f progress --shuffle tests/*.py
         
         
