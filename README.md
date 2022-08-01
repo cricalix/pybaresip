@@ -1,4 +1,4 @@
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![GitHub license](https://img.shields.io/github/license/cricalix/pybaresip)](LICENSE)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 pybaresip is a wrapper around the **baresip** executable, and uses **baresip** to handle all of the work related to setting up a SIP session, and transmitting audio over the session.
