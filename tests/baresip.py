@@ -96,6 +96,12 @@ def baresip_exe_resolution(context: DSLContext) -> None:
 
 @tdsl.context
 def baresip_config_resolution(context: DSLContext) -> None:
+    @context.before
+    def mock_exe_existence_to_true(self: ContextData) -> None:
+        self.mock_callable(target="shutil", method="which").for_call(
+            cmd="baresip"
+        ).to_return_value("/dummy/path/baresip").and_assert_called()
+
     @context.sub_context
     def when_no_config_path_is_provided(context: DSLContext) -> None:
         @context.before
@@ -112,14 +118,6 @@ def baresip_config_resolution(context: DSLContext) -> None:
             )
             bs = pbs.BareSIP(ident)
             self.assertEqual(bs._baresip_config, "config")
-
-        @context.sub_context
-        def and_baresip_is_not_in_the_path(context: DSLContext) -> None:
-            @context.before
-            def mock_path_existence_to_None(self: ContextData) -> None:
-                self.mock_callable(target="shutil", method="which").for_call(
-                    cmd="baresip"
-                ).to_return_value(None).and_assert_called()
 
     @context.sub_context
     def when_a_config_path_is_provided(context: DSLContext) -> None:
