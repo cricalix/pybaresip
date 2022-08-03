@@ -48,4 +48,4 @@ baresip up
 Quit
 ```
 
-*baresip up* is expected, but the command and the response are not.
+*baresip up* is expected, but the command and the response are not. Looks like an issue with **baresip** not doing ioctls correctly, and thus picking up the pty of the terminal that's running the python code and using that for output/echo. This means that sarge, as nice as it is, is not viable for wrapping **baresip** until they fix that issue (and on Debian, the packaged version is 1.0.0, while upstream is at 2.5.0+.)
