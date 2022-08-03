@@ -1,10 +1,10 @@
-import pybaresip as pbs
-
+import pexpect
 import testslide.dsl as tdsl
+import testslide.strict_mock as tsm
 from testslide import _ContextData as ContextData
 from testslide.dsl import _DSLContext as DSLContext
-import testslide.strict_mock as tsm
-import pexpect
+
+import pybaresip as pbs
 
 
 @tdsl.context

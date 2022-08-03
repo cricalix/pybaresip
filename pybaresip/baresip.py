@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import pexpect
-import pybaresip.identity as identity
-import shutil
-import pybaresip.exceptions as exceptions
 import os
+import shutil
+
+import pexpect
+
+import pybaresip.exceptions as exceptions
+import pybaresip.identity as identity
 
 
 class BareSIP:
