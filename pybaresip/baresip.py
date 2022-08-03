@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pexpect
 import pybaresip.identity as identity
 import shutil
