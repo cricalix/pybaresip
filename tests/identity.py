@@ -18,6 +18,19 @@ def identity_class(context: DSLContext) -> None:
                 )
                 self.assertEqual(x.sip, "sip:test@example.com:5061;auth_pass=test")
 
+        @context.sub_context("when auth_pass is set in a flag")
+        def when_auth_pass_is_set(context: DSLContext) -> None:
+            @context.example
+            def it_raises_an_error(self: ContextData) -> None:
+                with self.assertRaises(identity.IdentityFlagError):
+                    identity.Identity(
+                        user="test",
+                        password="test",
+                        gateway="example.com",
+                        port=5061,
+                        flags=[{"auth_pass": "fred"}],
+                    )
+
         @context.sub_context
         def when_no_port_is_provided(context: DSLContext) -> None:
             @context.example
