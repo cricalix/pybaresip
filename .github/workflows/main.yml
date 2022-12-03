@@ -46,6 +46,6 @@ jobs:
           pip install -e .
       - name: Run tests
         run: |
-          testslide -f progress --shuffle tests/*.py
+          testslide -f progress --shuffle tests/baresip_*.py
         
         
