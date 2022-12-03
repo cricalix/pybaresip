@@ -114,7 +114,7 @@ class PyBareSIP:
         """
         Callback for the dbus_next on_<signal> handlers, where signal is 'message'
         """
-        logger.error(f"Cannot handle messages. {ua=} {peer=} {ctype=} {body=}")
+        logger.error(f"Cannot handle messages. ua={ua} peer={peer} ctype={ctype} body={body}")
 
     async def invoke(self, action: str) -> str:
         """
