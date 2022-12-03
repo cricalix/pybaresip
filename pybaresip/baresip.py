@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
+import dataclasses as dc
 import json
 import logging
+import re
 from typing import Dict
-import dataclasses as dc
+
 import dbus_next.aio as aio_dn
 import dbus_next.errors as dn_err
-import re
+
 import pybaresip.exceptions as pbs_ex
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -114,7 +116,9 @@ class PyBareSIP:
         """
         Callback for the dbus_next on_<signal> handlers, where signal is 'message'
         """
-        logger.error(f"Cannot handle messages. ua={ua} peer={peer} ctype={ctype} body={body}")
+        logger.error(
+            f"Cannot handle messages. ua={ua} peer={peer} ctype={ctype} body={body}"
+        )
 
     async def invoke(self, action: str) -> str:
         """
@@ -383,7 +387,9 @@ class PyBareSIP:
         FIXME: Does not exist in 2.9
         """
         if self._baresip_version.major == 2:
-            raise NotImplementedError(f"baresip {self.ver} does not support this command")
+            raise NotImplementedError(
+                f"baresip {self.ver} does not support this command"
+            )
         return await self.invoke("uanext")
 
     async def uastat(self) -> str:

@@ -1,5 +1,2 @@
-black
-flake8
-isort
-pexpect
 testslide
+dbus_next
