@@ -2,10 +2,11 @@
 from __future__ import annotations
 
 import dataclasses as dc
+import functools
 import json
 import logging
 import re
-from typing import Dict
+from typing import Callable, Dict
 
 import dbus_next.aio as aio_dn
 import dbus_next.errors as dn_err
@@ -32,6 +33,19 @@ class BaresipModule:
     name: str
     modtype: str
     references: int
+
+
+def requires_version(fn: Callable) -> Callable:
+    @functools.wraps(fn)
+    def _inner(self, *args, **kwargs) -> None:
+        if self._baresip_version.major == 0:
+            raise Exception(
+                "This function only works if it can determine the baresip version. "
+                "The version is detected when `connect()` is executed."
+            )
+        return fn(self, *args, **kwargs)
+
+    return _inner
 
 
 class PyBareSIP:
@@ -384,6 +398,7 @@ class PyBareSIP:
             logger.warning(f"{account} did not start with 'sip'. Prefix added.")
         return await self.invoke(f"uanew {account}")
 
+    @requires_version
     async def uanext(self) -> str:
         """
         FIXME: Does not exist in 2.9
@@ -413,13 +428,13 @@ class PyBareSIP:
         return await self.invoke("uuid")
 
     async def vidloop(self) -> str:
-        return await self.invoke("vidloop")
+        raise NotImplementedError()
 
     async def vidloop_stop(self) -> str:
-        return await self.invoke("vidloop_stop")
+        raise NotImplementedError()
 
     async def vidsrc(self) -> str:
-        return await self.invoke("vidsrc")
+        raise NotImplementedError()
 
     async def loaded_modules(self) -> list[BaresipModule]:
         """
@@ -427,8 +442,6 @@ class PyBareSIP:
         server.
         """
         mods = await self.modules()
-        x = mods.splitlines()
-        print(type(x))
         modline_pattern = re.compile(
             r"\s+(?P<name>\w+) type=(?P<modtype>(\w+|\w+ \w+|\s))\s+ref=(?P<ref>\d+)"
         )
