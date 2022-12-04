@@ -16,8 +16,8 @@ def baresip_vidloop_stop(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("vidloop_stop")
+            ).for_call("vidloop_stop").and_assert_not_called()
 
-        @context.example
-        async def it_calls_invoke_with_vidloop_stop(self: ContextData) -> None:
-            await self.bs.vidloop_stop()
+        async def it_raises_NotImplementedError(self: ContextData) -> None:
+            with self.assertRaises(NotImplementedError):
+                await self.bs.vidloop_stop()

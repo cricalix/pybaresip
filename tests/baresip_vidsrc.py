@@ -16,8 +16,9 @@ def baresip_vidsrc(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("vidsrc")
+            ).for_call("vidsrc").and_assert_not_called()
 
         @context.example
-        async def it_calls_invoke_with_vidsrc(self: ContextData) -> None:
-            await self.bs.vidsrc()
+        async def it_raises_NotImplementedError(self: ContextData) -> None:
+            with self.assertRaises(NotImplementedError):
+                await self.bs.vidsrc()
