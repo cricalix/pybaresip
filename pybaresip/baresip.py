@@ -337,7 +337,7 @@ class PyBareSIP:
         """
         Instructs baresip to shut down.
 
-        Does not e
+        Emits events on DBus as registrations etc are shut down and deregistered.
         """
         return await self.invoke("quit")
 
