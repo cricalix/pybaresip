@@ -392,10 +392,16 @@ class PyBareSIP:
 
         This function enforces that the protocol is set to "sip".
         """
-        # FIXME Parse the account, instead of naive startswith().
-        if not account.startswith("sip"):
-            account = f"sip:{account}"
-            logger.warning(f"{account} did not start with 'sip'. Prefix added.")
+        ua_full = r"^sip:\w+@.*(:\d+)?"
+        ua_missing_proto = r"^\w+@.*(:\d+)?"
+        if not re.match(ua_full, account):
+            if not re.match(ua_missing_proto, account):
+                raise Exception(
+                    f"'{account}' does not appear to be a valid User-Agent string."
+                )
+            else:
+                account = f"sip:{account}"
+                logger.warning(f"{account} did not start with 'sip'. Prefix added.")
         return await self.invoke(f"uanew {account}")
 
     @requires_version
