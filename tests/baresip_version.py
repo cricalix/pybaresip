@@ -32,7 +32,7 @@ def baresip_version(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 BANNER
-            ).for_call("about").and_assert_called()
+            ).for_call("about").and_assert_called_once()
 
         @context.example
         async def it_returns_a_BaresipVersion_object(self: ContextData) -> None:
@@ -54,7 +54,7 @@ def baresip_version(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="about").to_return_value(
                 "totally radical"
-            ).and_assert_called()
+            ).and_assert_called_once()
 
         @context.example
         async def it_raises_an_exception(self: ContextData) -> None:

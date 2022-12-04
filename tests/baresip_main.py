@@ -16,7 +16,7 @@ def baresip_main(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("main")
+            ).for_call("main").and_assert_called_once()
 
         @context.example
         async def it_calls_invoke_with_main(self: ContextData) -> None:

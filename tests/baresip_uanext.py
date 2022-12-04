@@ -35,7 +35,7 @@ def baresip_uanext(context: DSLContext) -> None:
             async def before(self: ContextData) -> None:
                 self.mock_async_callable(
                     target=self.bs, method="invoke"
-                ).to_return_value("None").for_call("uanext")
+                ).to_return_value("None").for_call("uanext").and_assert_called_once()
 
             @context.example
             async def it_calls_invoke_with_uanext(self: ContextData) -> None:

@@ -16,7 +16,7 @@ def baresip_auloop(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("auloop")
+            ).for_call("auloop").and_assert_called_once()
 
         @context.example
         async def it_calls_invoke_with_auloop(self: ContextData) -> None:

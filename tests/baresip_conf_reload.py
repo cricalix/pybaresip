@@ -16,7 +16,7 @@ def baresip_conf_reload(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("conf_reload")
+            ).for_call("conf_reload").and_assert_called_once()
 
         @context.example
         async def it_calls_invoke_with_conf_reload(self: ContextData) -> None:

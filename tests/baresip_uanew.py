@@ -18,8 +18,10 @@ def baresip_uanew(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("uanew sip:test@localhost")
-            self.mock_callable(target=bs.logger, method="warning").to_return_value(None)
+            ).for_call("uanew sip:test@localhost").and_assert_called_once()
+            self.mock_callable(target=bs.logger, method="warning").to_return_value(
+                None
+            ).and_assert_called_once()
 
         @context.example
         async def it_adds_a_sip_prefix_and_calls_invoke(self: ContextData) -> None:
@@ -31,7 +33,7 @@ def baresip_uanew(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("uanew sip:test@localhost")
+            ).for_call("uanew sip:test@localhost").and_assert_called_once()
 
         @context.example
         async def it_calls_invoke(self: ContextData) -> None:

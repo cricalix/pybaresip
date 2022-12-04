@@ -16,7 +16,7 @@ def baresip_play(context: DSLContext) -> None:
         async def before(self: ContextData) -> None:
             self.mock_async_callable(target=self.bs, method="invoke").to_return_value(
                 "None"
-            ).for_call("play some_file")
+            ).for_call("play some_file").and_assert_called_once()
 
         @context.example
         async def it_calls_invoke_with_play(self: ContextData) -> None:
