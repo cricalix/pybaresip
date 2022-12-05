@@ -76,11 +76,18 @@ class PyBareSIP:
     def handle_event_call_call_outgoing(self, event: EventParams) -> None:
         logger.debug(f"Outbound call to {event['peeruri']}")
 
-    def handle_event_create(self) -> None:
-        pass
+    def handle_event_create(self, event: EventParams) -> None:
+        logger.debug(f"handle_event_create {event}")
 
     def handle_event_other_call_local_sdp(self, event: EventParams) -> None:
         logger.debug(f"handle_event_other_call_local_sdp {event['type']}")
+
+    def handle_event_other_module(self, event: EventParams) -> None:
+        """
+        Called on things like baresip starting up when this library is already listening
+        on the bus.
+        """
+        logger.debug(f"handle_event_other_module {event['param']}")
 
     def handle_event_register_registering(self, event: EventParams) -> None:
         """
@@ -205,15 +212,24 @@ class PyBareSIP:
         return await self.invoke("auloop_stop")
 
     async def auplay(self) -> str:
+        """
+        Instructs baresip to change the audio player.
+        """
         return await self.invoke("auplay")
 
     async def ausrc(self) -> str:
+        """
+        Instructs baresip to change the audio source.
+        """
         return await self.invoke("ausrc")
 
     async def callstat(self) -> str:
         return await self.invoke("callstat")
 
     async def conf_reload(self) -> str:
+        """
+        Instructs baresip to reload its configuration.
+        """
         return await self.invoke("conf_reload")
 
     async def config(self) -> str:
@@ -240,6 +256,11 @@ class PyBareSIP:
         return await self.invoke("contacts")
 
     async def dial(self, destination: str) -> str:
+        """
+        Instructs baresip to dial a destination. Baresip picks the User-Agent to use.
+
+        Emits events on DBus.
+        """
         return await self.invoke(f"dial {destination}")
 
     async def dial_contact(self) -> str:
@@ -391,6 +412,9 @@ class PyBareSIP:
         A User-Agent is specified as <protocol>:<username>@<address>:<port>;<flags>
 
         This function enforces that the protocol is set to "sip".
+
+        Triggers:
+        * application.CREATE
         """
         ua_full = r"^sip:\w+@.*(:\d+)?"
         ua_missing_proto = r"^\w+@.*(:\d+)?"
