@@ -49,7 +49,9 @@ def requires_version(fn: Callable) -> Callable:
 
 
 class PyBareSIP:
-    def __init__(self) -> None:
+    def __init__(
+        self, bus_name: str = "com.github.Baresip", path: str = "/baresip"
+    ) -> None:
         self._baresip_version = BaresipVersion(0, 0, 0)
 
     @property
@@ -159,22 +161,22 @@ class PyBareSIP:
         await self._bus.wait_for_disconnect()
 
     async def connect(self) -> None:
-        bus_name = "com.github.Baresip"
-        path = "/baresip"
         bus = await aio_dn.MessageBus().connect()
         try:
-            api = await bus.introspect(bus_name, path)
+            api = await bus.introspect(self.bus_name, self.path)
         except dn_err.DBusError as e:
-            if f"{bus_name} was not provided" in str(e):
+            if f"{self.bus_name} was not provided" in str(e):
                 msg = (
-                    f"{bus_name} was not found on DBus. Is baresip running with "
+                    f"{self.bus_name} was not found on DBus. Is baresip running with "
                     "the dbus module?"
                 )
             else:
                 msg = f"Failed when trying to introspect the baresip endpoint: {str(e)}"
-            raise Exception(f"Could not introspect {bus_name}{path}: {msg}") from e
-        proxy_object = bus.get_proxy_object(bus_name, path, api)
-        interface = proxy_object.get_interface(bus_name)
+            raise Exception(
+                f"Could not introspect {self.bus_name}{self.path}: {msg}"
+            ) from e
+        proxy_object = bus.get_proxy_object(self.bus_name, self.path, api)
+        interface = proxy_object.get_interface(self.bus_name)
         # These are dynamically defined methods that come from the introspection. mypy has to
         # be told to ignore them.
         interface.on_event(self._changed_event)  # type: ignore[attr-defined]
