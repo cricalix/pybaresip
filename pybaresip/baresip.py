@@ -282,8 +282,16 @@ class PyBareSIP:
         """
         return await self.invoke("help")
 
-    async def insmod(self) -> str:
-        return await self.invoke("insmod")
+    async def insmod(self, module: str) -> str:
+        """
+        Instructs baresip to insert a module, such as 'g711'.
+
+        Does not emit anything on DBus when the module is loaded.
+        """
+        module = module.strip()
+        if " " in module:
+            raise Exception(f"Module names may not contain spaces ({module}")
+        return await self.invoke(f"insmod {module}")
 
     async def listcalls(self) -> str:
         """
@@ -363,15 +371,38 @@ class PyBareSIP:
         return await self.invoke("quit")
 
     async def reginfo(self) -> str:
+        """
+        Fetches a list of registered user agents.
+
+        Does not emit anything on DBus.
+        """
         return await self.invoke("reginfo")
 
-    async def rmmod(self) -> str:
-        return await self.invoke("rmmod")
+    async def rmmod(self, module: str) -> str:
+        """
+        Instructs baresip to unload a loaded module, such as 'g711'.
+
+        Does not emit anything on DBus when the module is unloaded.
+        """
+        module = module.strip()
+        if " " in module:
+            raise Exception(f"Module names may not contain spaces ({module}")
+        return await self.invoke(f"rmmod {module}")
 
     async def sipstat(self) -> str:
+        """
+        Fetches tranports, connections, transactions from baresip.
+
+        Does not emit anything on DBus.
+        """
         return await self.invoke("sipstat")
 
     async def sysinfo(self) -> str:
+        """
+        Fetches system information from baresip - kernel, version of baresip, compiler etc.
+
+        Does not emit anything on DBus.
+        """
         return await self.invoke("sysinfo")
 
     async def timers(self) -> str:
