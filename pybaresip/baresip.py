@@ -404,7 +404,7 @@ class PyBareSIP:
         """
         return await self.invoke(f"uafind {account}")
 
-    async def uanew(self, account: str) -> str:
+    async def uanew(self, account: str, flags: dict[str, str] | None = None) -> str:
         """
         Creates a new User-Agent in baresip. baresip will use this agent as a
         Caller-ID for outbound calls.
@@ -412,6 +412,8 @@ class PyBareSIP:
         A User-Agent is specified as <protocol>:<username>@<address>:<port>;<flags>
 
         This function enforces that the protocol is set to "sip".
+
+        P
 
         Triggers:
         * application.CREATE
@@ -426,6 +428,9 @@ class PyBareSIP:
             else:
                 account = f"sip:{account}"
                 logger.warning(f"{account} did not start with 'sip'. Prefix added.")
+        if flags:
+            account_flags = ";".join([f"{k}={v}" for k, v in flags.items()])
+            account = f"{account};{account_flags}"
         return await self.invoke(f"uanew {account}")
 
     @requires_version
@@ -495,11 +500,22 @@ class PyBareSIP:
         x = await self.uafind(account=account)
         return "could not find" not in x
 
-    async def new_user_agent(self, account: str) -> str:
+    async def new_user_agent(
+        self,
+        account: str,
+        password: str | None = None,
+        flags: dict[str, str] | None = None,
+    ) -> str:
         """
         Wraps`uanew()` to provide a potentially friendlier method name.
         """
-        return await self.uanew(account=account)
+        if password and flags:
+            # Clobber.
+            flags["auth_pass"] = password
+        elif password and not flags:
+            flags = {"auth_pass": password}
+
+        return await self.uanew(account=account, flags=flags)
 
     async def version(self) -> BaresipVersion:
         """
